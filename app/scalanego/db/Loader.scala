@@ -156,7 +156,7 @@ class Loader(pb : Int) extends Actor {
   // Load the data
   if (debug) println("Load the data")
   //val db = Database.forConfig("mydb")
-  val db = Database.forURL("jdbc:postgresql://localhost:5432/negorestau?user=postgres&password=PJI2016&characterEncoding=UTF-8",
+  val db = Database.forURL("jdbc:postgresql://b6vgbsk9gucckik-postgresql.services.clever-cloud.com/b6vgbsk9gucckik?user=uejfwwjxt2e2s5uuuml4&password=CjrmQgdLOpYnZ2lOgUGf&characterEncoding=UTF-8",
     driver = "org.postgresql.Driver")
 
   //Title of the problem
