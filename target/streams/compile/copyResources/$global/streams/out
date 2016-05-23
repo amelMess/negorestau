@@ -1,0 +1,6 @@
+[0m[[0mdebug[0m] [0mCopy resource mappings: [0m
+[0m[[0mdebug[0m] [0m	(/home/amel/Bureau/Master/M1S2/PJI/negoResto/conf/routes,/home/amel/Bureau/Master/M1S2/PJI/negoResto/target/scala-2.11/classes/routes)[0m
+[0m[[0mdebug[0m] [0m	(/home/amel/Bureau/Master/M1S2/PJI/negoResto/conf/evolutions,/home/amel/Bureau/Master/M1S2/PJI/negoResto/target/scala-2.11/classes/evolutions)[0m
+[0m[[0mdebug[0m] [0m	(/home/amel/Bureau/Master/M1S2/PJI/negoResto/conf/application.conf,/home/amel/Bureau/Master/M1S2/PJI/negoResto/target/scala-2.11/classes/application.conf)[0m
+[0m[[0mdebug[0m] [0m	(/home/amel/Bureau/Master/M1S2/PJI/negoResto/conf/evolutions/default,/home/amel/Bureau/Master/M1S2/PJI/negoResto/target/scala-2.11/classes/evolutions/default)[0m
+[0m[[0mdebug[0m] [0m	(/home/amel/Bureau/Master/M1S2/PJI/negoResto/conf/evolutions/default/1.sql,/home/amel/Bureau/Master/M1S2/PJI/negoResto/target/scala-2.11/classes/evolutions/default/1.sql)[0m

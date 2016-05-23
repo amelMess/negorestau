@@ -1,0 +1,46 @@
+@(subscribeForm: Form[(String, String, String,String, String)])
+
+@import helper._
+
+
+@main("Inscription") {
+
+
+<div class="span8">
+    @helper.form(action = routes.Inscription.subscribe, 'class -> "form-horizontal") {
+    <fieldset>
+        <legend>Inscription</legend>
+
+        @inputText(
+        subscribeForm("nom"),
+        '_label -> "Nom"
+        )
+
+        @inputText(
+        subscribeForm("prenom"),
+        '_label -> "Prénom"
+        )
+
+        @inputText(
+        subscribeForm("email"),
+        '_label -> "Email"
+        )
+        
+        @inputPassword(
+        subscribeForm("password"),
+        '_label -> "Mot de passe"
+        )
+
+        @inputText(
+        subscribeForm("adresse"),
+        '_label -> "Adresse"
+        )
+
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">S'inscrire</button>
+        </div>
+    </fieldset>
+    }
+</div>
+}

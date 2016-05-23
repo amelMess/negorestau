@@ -1,0 +1,42 @@
+@(loginForm: Form[(String, String)])
+
+
+@import helper._
+
+@main("Login") {
+<div class="span8">
+    @helper.form(action = routes.Auth.authenticate, 'class -> "form-horizontal") {
+    <fieldset>
+        <legend>Connexion</legend>
+
+
+
+        @inputText(
+        loginForm("email"),
+        '_label -> "Email"
+        )
+        @inputPassword(
+        loginForm("password"),
+        '_label -> "Mot de passe"
+        )
+ 
+        <table>
+            <tr>
+                <td style="padding-right:20px">
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Se connecter</button>
+                    </div>
+                    </fieldset>
+                }
+                </td>
+                <td>
+                    @helper.form(action = routes.Inscription.inscription, 'class -> "form-horizontal") {
+                            <button class="btn btn-success"> 
+                               S'inscrire
+                            </button>
+                        }
+                </td>
+            </tr>
+        </table>
+</div>
+}

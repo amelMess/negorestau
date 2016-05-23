@@ -1,0 +1,80 @@
+@(problemInfo: (Int, String, String, String, String, Int), participants: List[(String, String)])
+@import helper._
+
+@main("Administration d'un problème"){
+<style type="text/css">
+        label
+		{
+		    display: block;
+		    width: 130px;
+		    float: left;
+		}
+</style>
+<script type="text/javascript">
+	function resoudre() {
+     	var nbParticipants = document.getElementById("nbParticipants").value
+
+     	if(nbParticipants <2) {
+     		alert("Il faut au moins 2 participants au problème")
+     		return
+     	}
+
+        document.getElementById("resolveForm").submit();
+    }
+</script>
+<div class="span8">
+    <form>
+    	<fieldset>
+       	 <legend>Rappel des informations du problème</legend>
+
+			  <label for ="desc">Description: </label>	<input type="text" id="desc" value="@problemInfo._2" disabled><br>
+			  <label for ="creation">Date de création: </label> <input type="text" id="creation" value="@problemInfo._3" disabled><br>
+			  <label for ="deadline">Date de fin: </label> <input type="text" id="deadline" value="@problemInfo._4" disabled><br>
+			  <label for ="detail">Détail: </label> <textarea id="detail"  rows="5" cols="45" disabled>@problemInfo._5</textarea><br>
+			  <input type="text" id="nbParticipants" value="@participants.length" hidden><br>
+
+			  @if(participants.length == 0) {
+			  	<label for ="participants">Pas encore de participant</label>
+			  } else {
+			  	<label for ="participants">Participants: </label> 
+			  }
+			  	<table id="participants">
+			  		@for(p <- participants){ 
+					    <tr>
+					   		<td style="padding-right:10px">@p._1</td><td>@p._2</td>
+					    </tr>
+						}
+				</table><br>
+	    </fieldset>
+    </form>
+</div>
+
+<br>
+<table>
+	<tr>
+		<td style="padding-right:10px">
+				<button class="btn btn-primary" onclick="resoudre()"> 
+							   Résoudre
+				</button>
+		</td>
+		<td style="padding-right:10px">
+			@helper.form(action = routes.Admin.deleteProblem, 'class -> "form-horizontal") {
+				<button class="btn btn-danger"> 
+							   Supprimer le problème
+				</button>
+			}
+		</td>
+		<td>
+			@helper.form(action = routes.Index.index, 'class -> "form-horizontal") {
+						  
+			        <button class="btn btn-primary">Retour à la sélection des problèmes</button>
+			}
+		</td>
+	</tr>
+<table>
+	@helper.form(action = routes.Admin.resolve, 'class -> "form-horizontal", 'id -> "resolveForm") {
+				<button name ="submitResolve" type="submit" style="display:none;"> 
+							   Résoudre
+				</button>
+			}
+}

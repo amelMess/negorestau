@@ -1,0 +1,45 @@
+#+TITLE: Comment déployer l'application
+#+ATUHOR: Maxime Morge
+#+DATE: <2016-03-01 Tue>
+
+* Exigence
+
+1. Télécharchez et installez sbt
+
+http://www.scala-sbt.org/
+
+* Création et alimentation de la base
+
+1. Créez l'utilisateur
+
+#+BEGIN_SRC sh
+createuser --pwprompt negorestauuser
+#+END_SRC
+
+2. Créez la base
+
+#+BEGIN_SRC sh
+createdb -Onegorestauuser -Eutf8 negorestau
+#+END_SRC
+
+3. Connectez-vous
+
+#+BEGIN_SRC
+psql -U negorestauuser -W negorestau
+#+END_SRC
+
+4. Créez les tables
+
+file:docs/script_create.sql
+
+file:docs/script_insert.sql
+
+* Démarrez l'application
+
+#+BEGIN_SRC sh
+sbt run
+#+END _SRC
+
+* Accédez à l'appication
+
+http://localhost:9000/

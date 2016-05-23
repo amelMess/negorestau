@@ -1,0 +1,39 @@
+@(problemForm: Form[(String, java.util.Date, String)])
+
+@import helper._
+
+@main("Création de problème") {
+
+
+
+<div class="span8">
+    @helper.form(action = routes.ProblemCreation.createProblem, 'class -> "form-horizontal") {
+    <fieldset>
+        <legend>Créer</legend>
+
+        @inputText(
+        problemForm("description"),
+        '_label -> "Nom"
+        )
+
+
+
+        @inputDate(
+        problemForm("deadline"),
+        '_label -> "Deadline"
+        )
+
+        @textarea(
+        problemForm("detail"),
+        '_label -> "Détail", 
+        'cols -> 50,
+        'rows -> 6
+        )
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Créer</button>
+        </div>
+    </fieldset>
+    }
+</div>
+}

@@ -1,0 +1,216 @@
+@(user: Int, problem: (Int, String, String, String, String, String, String), choices: List[(Int, String, String, String)], prefer: List[(Int, Int)], 
+dominantNames: List[(Int, String)], dominatedNames: List[(Int, String)], admissibleChoices:List[(Int, String)], updateForm: Form[(String, String, String,String)])
+
+@main("Participation à un problème") {
+
+  <h2>@problem._2</h2>
+  <h4>Par @problem._6 @problem._5</h4>
+  <h4>@problem._3</h4>
+  <h4>@problem._7</h4>
+  
+ 
+  <table cellspacing="2">
+    <tr>
+      <td rowspan=15><div id="mynetwork"></div></td>
+    </tr>
+     @for(c <- choices){ 
+    <tr>
+   	<td valign="top"><button id="@c._1" style="width:100px" class="btn btn-primary" title="@c._3" name="@c._2" onclick="addNodeWithId(this.name, this.id);"> @c._2</button></td>
+   </tr>
+	}
+</table>
+<table>
+  <tr>
+    <td style="padding-right:10px">
+      <button class="btn btn-primary" name="submit" onclick="submitChoices()"> 
+         Envoyer
+      </button>
+    </td>
+    <td>
+      @helper.form(action = routes.Index.index, 'class -> "form-horizontal") {
+                    
+                    <button class="btn btn-primary">Retour à la sélection des problèmes</button>
+            }
+    </td>
+  </tr>
+</table>
+<script type="text/javascript">
+    // create an array with nodes
+    
+    var nodes = new vis.DataSet([
+
+    ]);
+    
+    // create an array with edges
+    var edges = new vis.DataSet([
+       /* {from: 1, to: 3},
+        {from: 1, to: 2},
+        {from: 2, to: 4},
+        {from: 2, to: 5}*/
+    ]);
+
+    // create a network
+    var container = document.getElementById('mynetwork');
+
+    // provide the data in the vis format
+    var data = {
+        nodes: nodes,
+        edges: edges
+    };
+    
+    var locales = {
+      en: {
+        edit: 'Editer',
+        del: 'Supprimer',
+        back: 'Retour',
+        addEdge: 'Ajouter un arc',
+        editEdge: 'Editer l\'arc',
+        edgeDescription: 'Cliquez sur un noeud et faites glisser vers un autre noeud pour les relier.',
+        editEdgeDescription: 'Cliquez sur les points et faites glisser vers un noeud pour les relier.'
+      }
+    }
+    var options = {
+      autoResize: false,
+      locales: locales,
+      manipulation: {
+        enabled: true,
+        initiallyActive: true,
+        addNode: false,
+        addEdge: true,
+        editNode: undefined,
+        editEdge: true,
+        deleteNode: true,
+        deleteEdge: true,
+        controlNodeStyle:{
+        }
+      },
+      layout: {
+        randomSeed:undefined,  
+        improvedLayout:true,
+        hierarchical: {
+          enabled:false,
+          levelSeparation: 70,
+          direction: 'UD',   // UD, DU, LR, RL
+          sortMethod: 'directed' // hubsize, directed
+        }
+      },
+      edges:{
+        arrows: 'to',
+      },
+      physics:{
+        enabled: true,
+        repulsion: {
+          nodeDistance: 50
+        },
+        maxVelocity: 5,
+        solver: 'barnesHut',
+        stabilization: {
+          enabled: false
+        }
+      }
+      
+    }
+
+    // initialize your network!
+    var network = new vis.Network(container, data, options);
+    
+    @for(d <- admissibleChoices){
+    
+      addNodeWithId('@d._2', '@d._1')
+    }
+    @for(d <- dominantNames){
+    
+      addNodeWithId('@d._2', '@d._1')
+    }
+    @for(d <- dominatedNames){
+      
+      addNodeWithId('@d._2', '@d._1')
+    }
+    @for(p <- prefer){
+      
+      addEdge('@p._1', '@p._2')
+    }
+    
+
+    function addNode(name) {
+        //S'il n'existe pas de noeud avec ce label
+        var node = nodes.get({
+          filter: function (item) {
+            return (item.label == name);
+          }
+        });
+        //recuperer l'objet d'id max
+        var maxId = nodes.max('id');
+        if(maxId == null)
+        	nodes.add({id:1, label:name});
+        else if(node.length == 0)
+	        nodes.add({id:maxId.id+1, label:name});
+    }
+
+    function addNodeWithId(name, idNode) {
+		  var node = nodes.get({
+          filter: function (item) {
+            return (item.id == idNode);
+          }
+        });
+      if(node.length == 0)
+        nodes.add({id:idNode, label:name});
+    }
+    function addEdge(idDominant, idDominated) {
+        edges.add({from:idDominant, to:idDominated});
+    }
+
+    function submitChoices() {
+      var i, j;
+      var nodesIds = nodes.getIds();
+      
+      var froms = edges.get({
+        fields: ['from'], 
+        type: {
+          from: 'String'
+        }
+      });
+      var tos = edges.get({
+        fields: ['to'], 
+        type: {
+          to: 'String'
+        }
+      });
+      var admissible = "";
+      for (i = 0; i < nodesIds.length; i++) {
+        if(i==0)
+          admissible = admissible + nodesIds[i]
+        else
+          admissible = admissible + " " + nodesIds[i]
+      }
+    
+      var prefer = "";
+      for (j = 0; j < froms.length; j++) {
+          if(j==0)
+            prefer = prefer + froms[j]["from"] + " " + tos[j]["to"]
+          else
+            prefer = prefer + "," + froms[j]["from"] + " " + tos[j]["to"]
+      }
+
+        document.getElementById("admissible").value = admissible;
+        
+        document.getElementById("prefer").value = prefer;
+
+        document.getElementById("updateForm").submit();
+        alert("Préférences enregistrées")  
+    }
+    
+</script>
+@helper.form(action = routes.Problem.update, 'class -> "form-horizontal", 'id -> "updateForm") {
+  
+    <input type="hidden" name="@updateForm("problem").name" value ="@problem._1">
+    <input type="hidden" name="@updateForm("user").name" value ="@user">
+    <input type="hidden" id ="prefer" name="@updateForm("preferChoice").name">
+    <input type="hidden" id ="admissible" name="@updateForm("admissible").name" >
+     <div class="form-actions">
+            <button name ="submitGraph" type="submit" class="btn btn-primary" style="display:none;">Submit</button>
+      </div>
+    <br><br>
+    }
+    
+}

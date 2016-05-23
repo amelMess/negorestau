@@ -1,0 +1,180 @@
+@(idUser: Int,problemsWithoutSolution:List[(Int, String, String, String, String, String, Int, Int)], problemsWithSolution:List[(Int, String, String, String, String, String, Int, String, Int)],
+problemsAdmin:List[(Int, String, String, String, Int, Int)], problemForm: Form[(String, String)])
+
+@import play.api.libs.json.Json
+
+@main("Sélection d'un problème"){
+
+
+<script type="text/javascript">
+	function submitProblem() {
+		var radios = document.getElementsByName('problem');
+		var valeur = -1;
+		for(var i = 0; i < radios.length; i++){
+			if(radios[i].checked){
+				valeur = radios[i].value;
+				break;
+			}
+		}
+		if(valeur == -1) {
+			alert("Veuillez choisir un problème")
+		}else{
+			document.getElementById("idProblem").value = valeur;
+			document.getElementById("role").value = "participer";
+	        document.getElementById("problemForm").submit();
+    	}
+	}
+	function submitAdmin() {
+		var radios = document.getElementsByName('admin');
+		var valeur = -1;
+		for(var i = 0; i < radios.length; i++){
+			if(radios[i].checked){
+				valeur = radios[i].value;
+				break;
+			}
+		}
+		if(valeur == -1) {
+			alert("Veuillez choisir un problème")
+		}else{
+			document.getElementById("idProblem").value = valeur;
+			document.getElementById("role").value = "admin";
+	        document.getElementById("problemForm").submit();
+    	}
+	}
+</script>
+@if(problemsWithSolution.length > 0) {
+	@if(problemsWithSolution.length == 1){
+		<h3>Problème résolu</h3>
+	}else {
+		<h3>Problèmes résolus</h3>
+	}	
+	<div style="overflow:auto;">
+	<table id="tableau" style="margin:0;overflow:hidden">
+		<tr>
+			<th style="width:38%;">Problème</th>
+			<th style="width:20%;">Date de création</th>
+			<th>Créateur</th>
+			<th>Nb participants</th>
+			<th>Solution</th>
+		</tr>
+	</table>
+	</div>
+	<div style="max-height:200px;overflow-Y:auto;">
+	<table  id="tableau" style="margin:0;overflow:hidden">
+	     @for(p <- problemsWithSolution){ 
+	    <tr>
+		   	<td style="width:38%;">@p._2</td>
+		   	<td style="width:20%;">@p._3</td>
+		   	<td>@p._6 @p._5</td>
+		   	<td>@p._9</td>
+		   	<td>@p._8</td>
+	   </tr>
+		}
+	</table>
+	</div>
+}
+
+@if(problemsWithoutSolution.length > 0) {
+	@if(problemsWithoutSolution.length == 1) {
+		<h3>Problème en cours</h3>
+	}else {
+		<h3>Problèmes en cours</h3>
+	}
+	<div style="overflow:auto;"	>
+	<table id="tableau" style="margin:0;overflow:hidden">
+		<tr>
+			<th></th>
+			<th style="width:38%;">Problème</th>
+			<th style="width:20%;">Date de création</th>
+			<th style="width:20%;">Créateur</th>
+			<th>Nb participants</th>
+		</tr>
+	</table>
+	</div>
+	<div style="max-height:200px;overflow-Y:auto;">
+	<table id="tableau" style="margin:0;overflow:hidden">
+	     @for(p <- problemsWithoutSolution){ 
+	    <tr>
+	    	<td style="width:2%;"><input type="radio" name="problem" value="@p._1"></td>
+		   	<td style="width:36%;">@p._2</td>
+		   	<td style="width:20%;">@p._3</td>
+		   	<td>@p._6 @p._5</td>
+		   	<td>@p._8</td>
+	   </tr>
+		}
+	</table>
+</div>
+
+<br/>
+<table>
+	<tr>
+		<td style="padding-right:10px">
+			<button class="btn btn-primary" name="submit" onclick="submitProblem()"> 
+			   Participer
+			</button>
+    </tr>
+</table>
+}    
+@if(problemsAdmin.length > 0) {
+	@if(problemsAdmin.length == 1) {
+		<h3>Problème créé</h3>
+	}else {
+		<h3>Problèmes créés</h3>
+	}
+	<div style="overflow:auto;"	>
+	<table id="tableau" style="margin:0;overflow:hidden">
+		<tr>
+			<th></th>
+			<th style="width:38%;">Problème</th>
+			<th>Date de création</th>
+			<th>Nb participants</th>
+		</tr>
+	</table>
+	</div>
+	<div style="max-height:200px;overflow-Y:auto;">
+	<table id="tableau" style="margin:0;overflow:hidden">
+	     @for(p <- problemsAdmin){ 
+	    <tr>
+	    	<td style="width:2%;"><input type="radio" name="admin" value="@p._1"></td>
+		   	<td style="width:38%;">@p._2</td>
+		   	<td>@p._3</td>
+		   	<td>@p._6</td>
+	   </tr>
+		}
+	</table>
+</div>
+}
+<br/>
+<table>
+	<tr>
+		<td style="padding-right:10px">
+			@helper.form(action = routes.ProblemCreation.creation, 'class -> "form-horizontal") {
+			  
+			            <button class="btn btn-primary">Créer un problème</button>
+			    }
+    	</td>
+    	@if(problemsAdmin.length > 0) {
+	    	<td style="padding-right:10px">
+				<button class="btn btn-primary" name="submit" onclick="submitAdmin()"> 
+				   Administrer
+				</button>
+			</td>
+		}
+		<td >
+			@helper.form(action = routes.Auth.logout, 'class -> "form-horizontal") {
+				<button class="btn btn-danger"> 
+				   Se déconnecter
+				</button>
+			}	
+		</td>
+    </tr>
+</table>    
+@helper.form(action = routes.Index.submit, 'class -> "form-horizontal", 'id -> "problemForm") {
+  
+    <input type="hidden" id="idProblem" name="@problemForm("problem").name">
+    <input type="hidden" id="role" name="@problemForm("role").name" value="participer">
+     <div class="form-actions">
+            <button name ="submitProblem" type="submit" class="btn btn-primary" style="display:none;">Submit</button>
+      </div>
+    }
+}

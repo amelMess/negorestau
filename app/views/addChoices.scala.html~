@@ -1,0 +1,96 @@
+@(choicesForm: Form[(String, String, String)],json:List[List[(Int,String, String, String)]], submitForm:Form[String])
+
+@import helper._
+
+@main("Ajout des choix") {
+<div class="span8">
+    <fieldset>
+        <legend>Selectionner des choix existants</legend>
+        <div style="overflow:auto;">
+        <table id="tableau" style="margin:0px;overflow:hidden">
+            <tr>
+                <th></th>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Site web</th>
+            </tr>
+        </table>
+        </div>
+        <div style="max-height:200px;overflow-Y:auto;">
+        <table id="tableau" style="margin:0px;overflow:hidden">    
+            @for(p <- json){
+                @for(q <- p){
+                    @if(q._1 != 0) {
+                    <tr>
+                        <td><input type="checkbox" name="choices" id="@q._1" /></td>
+                        <td>@q._2</td>
+                        <td>@q._3</td>
+                        <td><a href="@q._4">@q._4</a></td>
+                    </tr>
+                    }
+                }
+            }
+        </table>
+        </div>
+        <div class="form-actions">
+            <button type="submit" id="Enregistrer" class="btn btn-primary" onclick="submitChoices()">Enregistrer</button>
+        </div>
+    </fieldset>
+</div>
+@helper.form(action = routes.ProblemCreation.submitChoices, 'class -> "form-horizontal", 'id -> "submitForm") {
+  
+    <input type="hidden" id="ids" name="@submitForm("ids").name">
+     <div class="form-actions">
+            <button name ="submitChoices" type="submit" class="btn btn-primary" style="display:none;">Submit</button>
+      </div>
+    }
+
+<script type="text/javascript">
+    function submitChoices() {
+        var ids = "";
+        var checkboxes = document.getElementsByName('choices');
+        var cpt = 0;
+        for(var i=0; i<checkboxes.length; i++) {
+             if(checkboxes[i].checked == true) {
+               ids = ids+ " "+ checkboxes[i].id;
+               cpt++; 
+           }
+        }
+        if(cpt >=2){
+            document.getElementById("ids").value = ids;
+            document.getElementById("submitForm").submit();
+        }else{
+            alert("Veuillez sélectionner au moins 2 choix")
+        }
+    }
+
+</script>
+
+
+<div class="span8">
+    @helper.form(action = routes.ProblemCreation.addChoices, 'class -> "form-horizontal") {
+    <fieldset>
+        <legend>Ajouter un nouveau choix</legend>
+
+        @inputText(
+        choicesForm("nom"),
+        '_label -> "Nom"
+        )
+
+        @inputText(
+        choicesForm("description"),
+        '_label -> "Description"
+        )
+
+        @inputText(
+        choicesForm("url"),
+        '_label -> "Url"
+        )
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Ajouter</button>
+        </div>
+    </fieldset>
+    }
+</div>
+}
