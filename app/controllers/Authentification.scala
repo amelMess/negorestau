@@ -34,6 +34,7 @@ implicit val session = play.api.db.slick.DB.createSession
 
   def check(username: String, password: String)(implicit session: play.api.db.slick.Config.driver.simple.Session): Boolean = {
     val user = users.filter(u => u.email === username).map {case (u) => (u.password)}.list 
+    session.close
      if(!user.isEmpty)
         BCrypt.checkpw(password, user.head)
      else
