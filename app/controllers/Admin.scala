@@ -43,7 +43,6 @@ object Admin extends Controller with Secured{
                                     .map(a => a.idUser)
       val usersInfo = (usersIds join users on (_ === _.id))
        .map{ case (ui, u) => (u.firstname, u.lastname)}.list
-       session.close
        usersInfo.distinct
        
   }  
